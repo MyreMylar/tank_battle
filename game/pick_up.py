@@ -2,9 +2,6 @@ import pygame
 import random
 
 
-# --------------------------------------
-# SCROLL DOWN FOR CHALLENGE 3 - PART 1
-# --------------------------------------
 class PickUpSpawner:
     def __init__(self, pick_ups, all_pick_up_sprites, walkable_zones):
         self.pick_ups = pick_ups
@@ -44,30 +41,17 @@ class PickUpSpawner:
 
                 self.try_spawn([random_pick_up_spot.screen_x_pos, random_pick_up_spot.screen_y_pos])
 
-    # -----------------------------------------------------------------------
-    # CHALLENGE 3 - PART 1
-    # ----------------------
-    #
-    # Add a 'laser' pickup to the try_spawn function below. (GUIDELINE IS 2 LINES OF CODE)
-    #
-    # Hints:
-    #
-    # - This function creates a randomly selected type of pick up at a given location in the maze.
-    #
-    # - Don't forget to adjust the randomRoll range so that your new laser pick up has
-    #   a chance of appearing.
-    #
-    # ------------------------------------------------------------
-    # CHALLENGE 3 - PART 2 IS FOUND IN THE 'player' PYTHON FILE.
-    # -----------------------------------------------------------------------
     def try_spawn(self, spawn_position):
-        random_roll = random.randint(0, 1)
+        random_roll = random.randint(0, 2)
         if random_roll == 0:
             self.pick_ups.append(PickUp(spawn_position, self.pickup_images["cluster_bomb"],
                                         "cluster_bomb", self.all_pick_up_sprites))
         elif random_roll == 1:
             self.pick_ups.append(PickUp(spawn_position, self.pickup_images["remote_missile"],
                                         "remote_missile", self.all_pick_up_sprites))
+        elif random_roll == 2:
+            self.pick_ups.append(PickUp(spawn_position, self.pickup_images["laser"],
+                                        "laser", self.all_pick_up_sprites))
 
     @staticmethod
     def load_tile_table(filename, width, height, use_transparency):

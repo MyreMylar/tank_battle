@@ -7,12 +7,6 @@ from game.remote_missile import RemoteMissile
 from game.laser import Laser
 
 
-# --------------------------------------
-# SCROLL DOWN FOR CHALLENGE 2 - PART 2
-# AND CHALLENGE 3 - PART 2
-# --------------------------------------
-
-
 class Scheme:
     def __init__(self):
         self.forward = K_UP
@@ -77,27 +71,8 @@ class Player(pygame.sprite.Sprite):
         self.have_active_power_up = False
         self.controlled_projectile = None
 
-    # ------------------------------------------------------------------------------
-    # CHALLENGE 2 - PART 2
-    # ---------------------
-    #
-    # On the player's death, create an explosion at the player's position. (GUIDELINE IS 1 LINE OF CODE)
-    #
-    # Tips:
-    #
-    # - The explosion data object variable is referred to as self.explosionData when in the player class
-    #
-    # - Remove the pass statement from the on_death() function before adding new code.
-    #
-    # - The explosion data class has a 'create_explosion' function.
-    #
-    # - The player's position is stored in self.position
-    #
-    # -------------------------------------------------------
-    # CHALLENGE 3 PART 1 STARTS IN THE 'pick_up' PYTHON FILE.
-    # ------------------------------------------------------------------------------
     def on_death(self):
-        pass
+        self.explosion_data.create_explosion(self.position)
 
     def activate_power_up(self, type_name, display_name):
         self.have_active_power_up = True
@@ -153,20 +128,9 @@ class Player(pygame.sprite.Sprite):
                 elif self.active_weapon == "cluster_bomb":
                     cluster_bomb = ClusterBomb(heading_vector, self.tank_front, self.player_id)
                     self.setup_projectile(cluster_bomb, projectiles)
-                
-                # -----------------------------------------------------------------
-                # CHALLENGE 3 - PART 2
-                # ---------------------
-                #
-                # Create and setup a Laser projectile when self.active_weapon is
-                # equal to "laser". (GUIDELINE IS 3 LINES OF CODE)
-                #   
-                # Hints:
-                #
-                # - Look at the other types of projectile created above,
-                #   creating the Laser will be almost identical
-                # 
-                # -----------------------------------------------------------------
+                elif self.active_weapon == "laser":
+                    laser_beam = Laser(heading_vector, self.tank_front, self.player_id)
+                    self.setup_projectile(laser_beam, projectiles)
 
     def update_real_bounds(self, position):
         heading = math.radians(-float(self.current_tank_angle))
