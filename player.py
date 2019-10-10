@@ -7,6 +7,12 @@ from game.remote_missile import RemoteMissile
 from game.laser import Laser
 
 
+# --------------------------------------
+# SCROLL DOWN FOR CHALLENGE 2 - PART 2
+# AND CHALLENGE 3 - PART 2
+# --------------------------------------
+
+
 class Scheme:
     def __init__(self):
         self.forward = K_UP
@@ -71,8 +77,27 @@ class Player(pygame.sprite.Sprite):
         self.have_active_power_up = False
         self.controlled_projectile = None
 
+    # ------------------------------------------------------------------------------
+    # CHALLENGE 2 - PART 2
+    # ---------------------
+    #
+    # On the player's death, create an explosion at the player's position. (GUIDELINE IS 1 LINE OF CODE)
+    #
+    # Tips:
+    #
+    # - The explosion data object variable is referred to as self.explosionData when in the player class
+    #
+    # - Remove the pass statement from the on_death() function before adding new code.
+    #
+    # - The explosion data class has a 'create_explosion' function.
+    #
+    # - The player's position is stored in self.position
+    #
+    # -------------------------------------------------------
+    # CHALLENGE 3 PART 1 STARTS IN THE 'pick_up' PYTHON FILE.
+    # ------------------------------------------------------------------------------
     def on_death(self):
-        self.explosion_data.create_explosion(self.position)
+        pass
 
     def activate_power_up(self, type_name, display_name):
         self.have_active_power_up = True
@@ -89,7 +114,7 @@ class Player(pygame.sprite.Sprite):
             self.controlled_projectile = projectile
         projectiles.append(projectile)
         self.deactivate_power_up()
-                    
+
     def deactivate_controlled_projectile(self):
         self.controlled_projectile = None
 
@@ -100,7 +125,7 @@ class Player(pygame.sprite.Sprite):
         if self.controlled_projectile is not None:
             if self.controlled_projectile.should_die:
                 self.deactivate_controlled_projectile()
-            else:  
+            else:
                 if self.should_fire:
                     self.should_fire = False
                     self.controlled_projectile = self.controlled_projectile.fire_pressed(projectiles)
@@ -112,7 +137,7 @@ class Player(pygame.sprite.Sprite):
 
                     if self.should_right_rotate and self.controlled_projectile.should_lock_tank_controls():
                         self.controlled_projectile.rotate_right(time_delta)
-                        
+
         else:
             if self.should_fire:
                 self.should_fire = False
@@ -128,9 +153,20 @@ class Player(pygame.sprite.Sprite):
                 elif self.active_weapon == "cluster_bomb":
                     cluster_bomb = ClusterBomb(heading_vector, self.tank_front, self.player_id)
                     self.setup_projectile(cluster_bomb, projectiles)
-                elif self.active_weapon == "laser":
-                    laser_beam = Laser(heading_vector, self.tank_front, self.player_id)
-                    self.setup_projectile(laser_beam, projectiles)
+
+                # -----------------------------------------------------------------
+                # CHALLENGE 3 - PART 2
+                # ---------------------
+                #
+                # Create and setup a Laser projectile when self.active_weapon is
+                # equal to "laser". (GUIDELINE IS 3 LINES OF CODE)
+                #
+                # Hints:
+                #
+                # - Look at the other types of projectile created above,
+                #   creating the Laser will be almost identical
+                #
+                # -----------------------------------------------------------------
 
     def update_real_bounds(self, position):
         heading = math.radians(-float(self.current_tank_angle))
@@ -155,7 +191,7 @@ class Player(pygame.sprite.Sprite):
         point_list = [self.real_bounds_tl, self.real_bounds_tr, self.real_bounds_br, self.real_bounds_bl]
         # noinspection PyArgumentList
         pygame.draw.lines(screen, (255, 0, 0), True, point_list, 1)
-    
+
     def update_sprite(self, all_sprites):
         self.image = self.tank_image
         all_sprites.add(self)
@@ -163,7 +199,7 @@ class Player(pygame.sprite.Sprite):
 
     def process_event(self, event):
 
-        if event.type == KEYDOWN:     
+        if event.type == KEYDOWN:
             if event.key == self.scheme.left:
                 self.should_left_rotate = True
             if event.key == self.scheme.right:
@@ -204,7 +240,7 @@ class Player(pygame.sprite.Sprite):
         temp_tank_pos = [0.0, 0.0]
         temp_tank_pos[0] = self.position[0]
         temp_tank_pos[1] = self.position[1]
-        
+
         if self.controlled_projectile is None or not self.controlled_projectile.should_lock_tank_controls():
             rotate_dir = 1
             if self.should_move_backward:
@@ -242,11 +278,11 @@ class Player(pygame.sprite.Sprite):
 
             heading = math.radians(90.0 - float(self.current_tank_angle))
             heading_vector = (math.cos(heading), math.sin(heading))
-            
+
             if self.should_move_forward:
                 if abs(self.tank_speed) < self.tank_top_speed:
                     self.tank_speed += self.tank_acceleration * time_delta
-                
+
             elif self.should_move_backward:
                 if abs(self.tank_speed) < self.tank_top_speed:
                     self.tank_speed -= self.tank_acceleration * time_delta
@@ -263,7 +299,7 @@ class Player(pygame.sprite.Sprite):
             temp_rect.center = (int(temp_tank_pos[0]), int(temp_tank_pos[1]))
 
         self.update_real_bounds(temp_tank_pos)
-            
+
         collided = False
         collision_points = []
         for wall in maze_walls:
@@ -276,7 +312,7 @@ class Player(pygame.sprite.Sprite):
         if collided:
             loops = 0
             temp_tank_pos = self.handle_collision(collision_points, temp_tank_pos, temp_rect, maze_walls, loops)
-                
+
             self.position[0] = temp_tank_pos[0]
             self.position[1] = temp_tank_pos[1]
 
@@ -290,7 +326,7 @@ class Player(pygame.sprite.Sprite):
 
     def handle_collision(self, collision_points, temp_tank_pos, temp_rect, maze_walls, loops):
         temp_tank_pos = temp_tank_pos
-        
+
         if len(collision_points) > 0 and loops < 10:
             loops += 1
             all_collision_vecs = [0.0, 0.0]
@@ -298,14 +334,14 @@ class Player(pygame.sprite.Sprite):
                 all_collision_vecs[0] += temp_tank_pos[0] - point[0]
                 all_collision_vecs[1] += temp_tank_pos[1] - point[1]
             average_collision_vec = [0.0, 0.0]
-            average_collision_vec[0] = all_collision_vecs[0]/len(collision_points)
-            average_collision_vec[1] = all_collision_vecs[1]/len(collision_points)
+            average_collision_vec[0] = all_collision_vecs[0] / len(collision_points)
+            average_collision_vec[1] = all_collision_vecs[1] / len(collision_points)
             collision_vec_len = math.sqrt((average_collision_vec[0] ** 2) + (average_collision_vec[1] ** 2))
-            normal_collision_vec = [average_collision_vec[0]/collision_vec_len,
-                                    average_collision_vec[1]/collision_vec_len]
+            normal_collision_vec = [average_collision_vec[0] / collision_vec_len,
+                                    average_collision_vec[1] / collision_vec_len]
 
             collision_overlap = min(1.0, max(0.3, (self.half_longest_diagonal - collision_vec_len)))
-            
+
             normal_collision_vec[0] *= collision_overlap
             normal_collision_vec[1] *= collision_overlap
 
@@ -315,7 +351,7 @@ class Player(pygame.sprite.Sprite):
             temp_rect.center = (int(temp_tank_pos[0]), int(temp_tank_pos[1]))
 
             self.update_real_bounds(temp_tank_pos)
-            
+
             # collided = False
             collision_points = []
             for wall in maze_walls:
@@ -339,11 +375,11 @@ class Player(pygame.sprite.Sprite):
             result4 = self.test_rect_edge_against_real_bounds(pickup_rect.bottomleft, pickup_rect.bottomright)
             if result1:
                 collided = True
-            if result2: 
+            if result2:
                 collided = True
             if result3:
                 collided = True
-            if result4: 
+            if result4:
                 collided = True
 
         return collided
@@ -357,11 +393,11 @@ class Player(pygame.sprite.Sprite):
 
         if result1[0]:
             collided = True
-        if result2[0]: 
+        if result2[0]:
             collided = True
         if result3[0]:
             collided = True
-        if result4[0]: 
+        if result4[0]:
             collided = True
 
         return collided
@@ -379,13 +415,13 @@ class Player(pygame.sprite.Sprite):
                 if result1[0]:
                     collided = True
                     collision_points.append(result1[1])
-                if result2[0]: 
+                if result2[0]:
                     collided = True
                     collision_points.append(result2[1])
                 if result3[0]:
                     collided = True
                     collision_points.append(result3[1])
-                if result4[0]: 
+                if result4[0]:
                     collided = True
                     collision_points.append(result4[1])
 
@@ -413,9 +449,9 @@ class Player(pygame.sprite.Sprite):
             # Lines are collinear, and so intersect if they have any overlap
             intersection_truth1 = ((c[0] - a[0] < 0.0) != (c[0] - b[0] < 0.0))
             intersection_truth2 = ((c[1] - a[1] < 0.0) != (c[1] - b[1] < 0.0))
-            intersection_point[0] = c[0] + (d[0]-c[0])/2  # set collision point to middle of line
-            intersection_point[1] = c[1] + (d[1]-c[1])/2
-                
+            intersection_point[0] = c[0] + (d[0] - c[0]) / 2  # set collision point to middle of line
+            intersection_point[1] = c[1] + (d[1] - c[1]) / 2
+
             return [intersection_truth1 or intersection_truth2, intersection_point]
 
         if rxs == 0.0:
@@ -427,7 +463,7 @@ class Player(pygame.sprite.Sprite):
 
         if (t >= 0.0) and (t <= 1.0) and (u >= 0.0) and (u <= 1.0):  # lines intersect
             intersection_truth = True
-            intersection_point = [a[0] + t*r[0], a[1] + t*r[1]]
+            intersection_point = [a[0] + t * r[0], a[1] + t * r[1]]
 
         return [intersection_truth, intersection_point]
 
@@ -440,11 +476,11 @@ class Player(pygame.sprite.Sprite):
         y2 = line[1][1]
         x3 = point[0]
         y3 = point[1]
-        
-        px = x2-x1
-        py = y2-y1
 
-        something = px*px + py*py
+        px = x2 - x1
+        py = y2 - y1
+
+        something = px * px + py * py
 
         u = ((x3 - x1) * px + (y3 - y1) * py) / float(something)
 
@@ -465,7 +501,7 @@ class Player(pygame.sprite.Sprite):
         # can just return the squared distance instead
         # (i.e. remove the sqrt) to gain a little performance
 
-        dist = math.sqrt(dx*dx + dy*dy)
+        dist = math.sqrt(dx * dx + dy * dy)
 
         return dist
 
@@ -477,7 +513,7 @@ class RespawnPlayer:
         self.player_id = player.player_id
         self.score = player.player_score
         self.score.active_power_up = "None"
-        
+
         self.respawn_timer = 2.0
         self.time_to_spawn = False
         self.has_respawned = False
