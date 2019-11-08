@@ -77,12 +77,12 @@ class Player(pygame.sprite.Sprite):
     def activate_power_up(self, type_name, display_name):
         self.have_active_power_up = True
         self.active_weapon = type_name
-        self.player_score.activePowerUp = display_name
+        self.player_score.active_power_up = display_name
 
     def deactivate_power_up(self):
         self.have_active_power_up = False
         self.active_weapon = "bullets"
-        self.player_score.activePowerUp = "None"
+        self.player_score.active_power_up = "None"
 
     def setup_projectile(self, projectile, projectiles):
         if projectile.is_controlled():

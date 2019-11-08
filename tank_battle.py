@@ -97,11 +97,11 @@ def main():
     player_2_control_scheme.fire = K_RCTRL
 
     player_1 = Player(explosion_data, start_location_1, player_1_control_scheme,
-                      'green_tank.png', player_1_id, player_1_score)
+                      'images/green_tank.png', player_1_id, player_1_score)
     players.append(player_1)
 
     player_2 = Player(explosion_data, start_location_2, player_2_control_scheme,
-                      'red_tank.png', player_2_id, player_2_score)
+                      'images/red_tank.png', player_2_id, player_2_score)
     players.append(player_2)
 
     # bullets
